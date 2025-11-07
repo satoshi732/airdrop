@@ -1,7 +1,12 @@
 import { supabase } from '../lib/supabase';
+import { AirdropClaim } from '../types/crypto';
 
 export const airdropService = {
-  async claimAirdrop(walletAddress, cryptoId, amount) {
+  async claimAirdrop(
+    walletAddress: string,
+    cryptoId: string,
+    amount: number
+  ): Promise<{ success: boolean; message: string }> {
     try {
       const { error } = await supabase.from('airdrop_claims').insert({
         wallet_address: walletAddress,
@@ -33,7 +38,7 @@ export const airdropService = {
     }
   },
 
-  async getUserClaims(walletAddress) {
+  async getUserClaims(walletAddress: string): Promise<AirdropClaim[]> {
     try {
       const { data, error } = await supabase
         .from('airdrop_claims')
@@ -49,7 +54,7 @@ export const airdropService = {
     }
   },
 
-  async getAllClaims() {
+  async getAllClaims(): Promise<AirdropClaim[]> {
     try {
       const { data, error } = await supabase
         .from('airdrop_claims')

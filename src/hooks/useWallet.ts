@@ -1,14 +1,27 @@
 import { useState, useEffect } from 'react';
 
+interface EthereumProvider {
+  isMetaMask?: boolean;
+  request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
+  on: (event: string, handler: (...args: unknown[]) => void) => void;
+  removeListener: (event: string, handler: (...args: unknown[]) => void) => void;
+}
+
+declare global {
+  interface Window {
+    ethereum?: EthereumProvider;
+  }
+}
+
 export const useWallet = () => {
-  const [walletAddress, setWalletAddress] = useState('');
+  const [walletAddress, setWalletAddress] = useState<string>('');
   const [isConnecting, setIsConnecting] = useState(false);
 
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined') {
-      const handleAccountsChanged = (accounts) => {
+      const handleAccountsChanged = (accounts: unknown) => {
         if (Array.isArray(accounts) && accounts.length > 0) {
-          setWalletAddress(accounts[0]);
+          setWalletAddress(accounts[0] as string);
         } else {
           setWalletAddress('');
         }
@@ -28,7 +41,7 @@ export const useWallet = () => {
         setIsConnecting(true);
         const accounts = await window.ethereum.request({
           method: 'eth_requestAccounts',
-        });
+        }) as string[];
 
         if (accounts.length > 0) {
           setWalletAddress(accounts[0]);
