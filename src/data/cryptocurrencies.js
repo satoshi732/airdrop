@@ -1,6 +1,4 @@
-import { Cryptocurrency } from '../types/crypto';
-
-export const cryptocurrencies: Cryptocurrency[] = [
+export const cryptocurrencies = [
   {
     id: 'btc',
     name: 'Bitcoin',
